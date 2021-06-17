@@ -60,7 +60,9 @@ roomba_500driver_meiji::RoombaCtrl Navigator::create_ctrl(double linear_x, doubl
 }
 
 void Navigator::cmd_vel_callback(const geometry_msgs::TwistConstPtr &twist) {
-    roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(twist->linear.x, twist->angular.z);
+    constexpr double linear_coefficient = 2.0;
+    roomba_500driver_meiji::RoombaCtrl roomba_ctrl =
+        create_ctrl(linear_coefficient * twist->linear.x, linear_coefficient * twist->angular.z);
     roomba_ctrl_pub_.publish(roomba_ctrl);
     cmd_vel_update = true;
 }
@@ -81,7 +83,7 @@ void Navigator::process() {
     while (ros::ok()) {
         if (elasped_time <= 5.0 && !cmd_vel_update) {
             ROS_WARN("Move Forward");
-            roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(1., 0.);
+            roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0.5, 0.);
             roomba_ctrl_pub_.publish(roomba_ctrl);
         }
         if (reached_goal) {

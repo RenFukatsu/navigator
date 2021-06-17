@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 746
   - Class: rviz/Selection
@@ -99,7 +98,7 @@ Visualization Manager:
       Marker Topic: /roomba3/dwa_planner/candidate_trajectories
       Name: MarkerArray
       Namespaces:
-        /roomba3/dwa_planner/candidate_trajectories: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -107,7 +106,7 @@ Visualization Manager:
       Marker Topic: /roomba3/dwa_planner/selected_trajectory
       Name: Marker
       Namespaces:
-        /roomba3/dwa_planner/selected_trajectory: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -119,8 +118,8 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color: 239; 41; 41
+      Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -182,7 +181,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 43.8458366394043
+      Distance: 10.745776176452637
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -190,9 +189,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 3.7740819454193115
-        Y: 0.7344716191291809
-        Z: 2.4070053100585938
+        X: 5.515229225158691
+        Y: 3.5437049865722656
+        Z: 2.405305862426758
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
