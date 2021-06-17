@@ -21,7 +21,7 @@
             <remap from="/scan" to="corrected_scan"/>
             <remap from="/local_goal" to="local_goal"/>
             <remap from="/cmd_vel" to="local_path/cmd_vel"/>
-            <remap from="/odom" to="roomba/odometry"/>
+            <remap from="/odom" to="roomba/corrected_odometry"/>
         </node>
 
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
