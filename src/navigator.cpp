@@ -30,7 +30,8 @@ void Navigator::read_waypoints() {
         pose_stamped.pose.orientation.w = param_list[3];
         pose_stamped.pose.orientation.x = param_list[4];
         pose_stamped.pose.orientation.y = param_list[5];
-        pose_stamped.pose.orientation.z = std::sqrt(1. - std::pow(pose_stamped.pose.orientation.y, 2));
+        pose_stamped.pose.orientation.z =
+            std::sqrt(1. - std::pow(pose_stamped.pose.orientation.y, 2));
 
         way_points.push_back(pose_stamped);
     }
@@ -64,8 +65,9 @@ void Navigator::cmd_vel_callback(const geometry_msgs::TwistConstPtr &twist) {
     cmd_vel_update = true;
 }
 
-bool Navigator::is_close_local_goal(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose,
-                                    const geometry_msgs::PoseStamped &local_goal) {
+bool Navigator::is_close_local_goal(
+    const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose,
+    const geometry_msgs::PoseStamped &local_goal) {
     double diff_x = amcl_pose->pose.pose.position.x - local_goal.pose.position.x;
     double diff_y = amcl_pose->pose.pose.position.y - local_goal.pose.position.y;
     if (std::sqrt(diff_x * diff_x + diff_y * diff_y) <= TOLERANCE) return true;
