@@ -15,6 +15,7 @@ class Navigator {
     void pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
     void cmd_vel_callback(const geometry_msgs::TwistConstPtr &twist);
     void read_waypoints();
+    roomba_500driver_meiji::RoombaCtrl create_ctrl(double linear_x, double angular_z);
     bool is_close_local_goal(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose,
                              const geometry_msgs::PoseStamped &local_goal);
 
@@ -25,6 +26,9 @@ class Navigator {
     ros::Subscriber cmd_vel_sub_;
     ros::Publisher local_goal_pub_;
     ros::Publisher roomba_ctrl_pub_;
+    bool reached_goal;
+    bool cmd_vel_update;
+    int HZ;
     double TOLERANCE;
     std::vector<geometry_msgs::PoseStamped> way_points;
 };
