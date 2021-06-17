@@ -3,6 +3,8 @@ project(navigator)
 
 find_package(catkin REQUIRED COMPONENTS
   amcl
+  std_msgs
+  nav_msgs
   dwa_planner
   geometry_msgs
   roomba_500driver_meiji
@@ -18,8 +20,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME}_node src/navigator.cpp src/navigator_node.cpp)
+add_executable(waypoints_manager_node src/waypoints_manager_node.cpp src/waypoints_manager.cpp)
+target_link_libraries(waypoints_manager_node ${catkin_LIBRARIES})
 
-target_link_libraries(${PROJECT_NAME}_node
-  ${catkin_LIBRARIES}
-)
+add_executable(message_reviser_node src/message_reviser.cpp src/message_reviser_node.cpp)
+target_link_libraries(message_reviser_node ${catkin_LIBRARIES})

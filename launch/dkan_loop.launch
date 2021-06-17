@@ -24,9 +24,9 @@
             <remap from="/odom" to="roomba/odometry"/>
         </node>
 
-        <node pkg="navigator" type="navigator_node" name="navigator" output="screen">
-            <rosparam command="load" file="$(find navigator)/config/way_points.yaml" />
+        <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
+        <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
+            <rosparam command="load" file="$(find navigator)/config/dkan_loop_waypoints.yaml" />
         </node>
     </group>
-    <node pkg="rosbag" type="record" name="rosbag_record" args="record -O /home/amsl/scan.bag /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/amcl_pose /tf /tf_static" />
 </launch>
