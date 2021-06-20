@@ -29,4 +29,6 @@
             <rosparam command="load" file="$(find navigator)/config/dkan_loop_waypoints.yaml" />
         </node>
     </group>
+
+    <node pkg="rosbag" type="record" name="rosbag_record" args="-O dkan_loop.bag /$(arg roomba)/scan /$(arg roomba)/amcl_pose /$(arg roomba)/roomba/odometry /tf /tf_static" />
 </launch>
