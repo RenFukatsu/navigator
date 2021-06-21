@@ -23,8 +23,7 @@ void MessageReviser::roomba_odometry_callback(const nav_msgs::OdometryConstPtr &
 
 void MessageReviser::local_cmd_vel_callback(const geometry_msgs::TwistConstPtr &twist) {
     if (reached_goal_) return;
-    roomba_500driver_meiji::RoombaCtrl roomba_ctrl =
-        create_ctrl(LINEAR_COEF * twist->linear.x, LINEAR_COEF * twist->angular.z);
+    roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(twist->linear.x, twist->angular.z);
     roomba_ctrl_pub_.publish(roomba_ctrl);
     update_local_cmd_vel_ = true;
 }
