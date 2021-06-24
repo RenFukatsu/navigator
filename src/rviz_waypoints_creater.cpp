@@ -15,7 +15,7 @@ void RvizWaypointsCreater::pose_callback(const geometry_msgs::PoseStampedConstPt
     static std::ofstream ofs(filename);
     static int index = 0;
     ofs << "waypoint" << index++ << ": [";
-    ofs << std::fixed << std::setprecision(8) << pose->pose.position.x << ", "
+    ofs << std::fixed << std::setprecision(14) << pose->pose.position.x << ", "
         << pose->pose.position.y << ", " << pose->pose.position.z << ", "
         << pose->pose.orientation.w << ", " << pose->pose.orientation.x << ", "
         << pose->pose.orientation.y << ", " << pose->pose.orientation.z << "]\n";
