@@ -30,5 +30,5 @@
         </node>
     </group>
 
-    <node pkg="rosbag" type="record" name="rosbag_record" args="-O dkan_loop.bag /$(arg roomba)/scan /$(arg roomba)/amcl_pose /$(arg roomba)/roomba/odometry /tf /tf_static" />
+    <node pkg="rosbag" type="record" name="rosbag_record" args="-O dkan_loop_$(arg roomba).bag /$(arg roomba)/scan /roomba1/amcl_pose /roomba2/amcl_pose /roomba3/amcl_pose /roomba4/amcl_pose /roomba5/amcl_pose /roomba6/amcl_pose /$(arg roomba)/roomba/odometry /tf /tf_static" />
 </launch>
