@@ -29,8 +29,7 @@ void WaypointsManager::read_waypoints() {
         pose_stamped.pose.orientation.w = param_list[3];
         pose_stamped.pose.orientation.x = param_list[4];
         pose_stamped.pose.orientation.y = param_list[5];
-        pose_stamped.pose.orientation.z =
-            std::sqrt(1. - std::pow(pose_stamped.pose.orientation.y, 2));
+        pose_stamped.pose.orientation.z = param_list[6];
 
         waypoints_.push_back(pose_stamped);
     }
