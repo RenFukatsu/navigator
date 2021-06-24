@@ -25,3 +25,6 @@ target_link_libraries(waypoints_manager_node ${catkin_LIBRARIES})
 
 add_executable(message_reviser_node src/message_reviser.cpp src/message_reviser_node.cpp)
 target_link_libraries(message_reviser_node ${catkin_LIBRARIES})
+
+add_executable(rviz_waypoints_creater src/rviz_waypoints_creater.cpp)
+target_link_libraries(rviz_waypoints_creater ${catkin_LIBRARIES})
