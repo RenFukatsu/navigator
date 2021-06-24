@@ -14,10 +14,11 @@ RvizWaypointsCreater::RvizWaypointsCreater() : private_nh_("~") {
 void RvizWaypointsCreater::pose_callback(const geometry_msgs::PoseStampedConstPtr &pose) {
     static std::ofstream ofs(filename);
     static int index = 0;
-    ofs << "waypoints" << index++ << ": [" << pose->pose.position.x << ", " << pose->pose.position.y
-        << ", " << pose->pose.position.z << ", " << pose->pose.orientation.w << ", "
-        << pose->pose.orientation.x << ", " << pose->pose.orientation.y << ", "
-        << pose->pose.orientation.z << "]\n";
+    ofs << "waypoint" << index++ << ": [";
+    ofs << std::fixed << std::setprecision(3) << pose->pose.position.x << ", "
+        << pose->pose.position.y << ", " << pose->pose.position.z << ", "
+        << pose->pose.orientation.w << ", " << pose->pose.orientation.x << ", "
+        << pose->pose.orientation.y << ", " << pose->pose.orientation.z << "]\n";
 }
 
 void RvizWaypointsCreater::process() { ros::spin(); }

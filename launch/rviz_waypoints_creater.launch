@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="map_file" default="$(find roomba_visualizer)/map/map.yaml" />
-    <arg name="filedir" default = "$(find navigator)" />
+    <arg name="filedir" default = "$(find navigator)/config" />
     <arg name="file" default="waypoints.yaml" />
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigator)/rviz/waypoints_creater.rviz" />

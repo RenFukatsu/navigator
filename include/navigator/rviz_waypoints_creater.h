@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 
 #include <fstream>
+#include <iomanip>
 
 class RvizWaypointsCreater {
  public:
