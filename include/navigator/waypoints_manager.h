@@ -29,6 +29,7 @@ class WaypointsManager {
     bool WITH_RVIZ;
     double GOAL_THRESHOLD;
     std::vector<geometry_msgs::PoseStamped> waypoints_;
+    bool reached_goal_;
 };
 
 #endif  // MULTI_ROBOTS_WAYPOINTS_MANAGER_H_

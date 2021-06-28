@@ -1,6 +1,6 @@
 #include "navigator/waypoints_manager.h"
 
-WaypointsManager::WaypointsManager() : private_nh_("~") {
+WaypointsManager::WaypointsManager() : private_nh_("~"), reached_goal_(false) {
     pose_sub_ = nh_.subscribe("amcl_pose", 1, &WaypointsManager::pose_callback, this);
     local_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
     reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>(nh_.getNamespace() + "/reached_goal");
@@ -58,13 +58,10 @@ bool WaypointsManager::clear_waypoints_service(std_srvs::TriggerRequest &req,
 void WaypointsManager::pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose) {
     static size_t way_points_idx = 0;
     static auto call_reached_goal = [](ros::ServiceClient &client, bool reached_goal) -> void {
-        static bool reached_goal_status = false;
-        if (reached_goal_status == reached_goal) return;
         std_srvs::SetBool set_bool;
         set_bool.request.data = reached_goal;
         if (client.call(set_bool)) {
             ROS_DEBUG_STREAM(set_bool.response.message);
-            reached_goal_status = reached_goal;
         } else {
             ROS_ERROR("Failed to call service reached_goal");
         }
@@ -72,10 +69,10 @@ void WaypointsManager::pose_callback(const geometry_msgs::PoseWithCovarianceStam
     if (way_points_idx >= waypoints_.size()) {
         if (way_points_idx != waypoints_.size()) way_points_idx = waypoints_.size();
         ROS_INFO_THROTTLE(15.0, "Robot reached goal.");
-        call_reached_goal(reached_goal_client_, true);
+        if (!reached_goal_) call_reached_goal(reached_goal_client_, true);
         return;
     } else {
-        call_reached_goal(reached_goal_client_, false);
+        if (reached_goal_)call_reached_goal(reached_goal_client_, false);
     }
     if (is_close_local_goal(amcl_pose, waypoints_[way_points_idx])) {
         way_points_idx++;
