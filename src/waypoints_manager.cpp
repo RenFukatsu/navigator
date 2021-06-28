@@ -66,6 +66,14 @@ void WaypointsManager::pose_callback(const geometry_msgs::PoseWithCovarianceStam
             ROS_ERROR("Failed to call service reached_goal");
         }
     };
+    if (WITH_RVIZ && waypoints_.size() == 0) {
+        ros::Rate loop_rate(1);
+        while (ros::ok()) {
+            ROS_WARN("The number of waypoints is 0. Input waypoint in Rviz.");
+            loop_rate.sleep();
+            if (waypoints_.size() > 0) break;
+        }
+    }
     if (way_points_idx >= waypoints_.size()) {
         if (way_points_idx != waypoints_.size()) way_points_idx = waypoints_.size();
         ROS_INFO_THROTTLE(15.0, "Robot reached goal.");
