@@ -3,15 +3,18 @@
 
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <std_msgs/Bool.h>
 #include <ros/ros.h>
+#include <std_srvs/SetBool.h>
+#include <std_srvs/Trigger.h>
 
 class WaypointsManager {
  public:
     WaypointsManager();
     void process();
-    void pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
     void read_waypoints();
+    void rviz_local_goal_callback(const geometry_msgs::PoseStampedConstPtr &pose);
+    bool clear_waypoints_service(std_srvs::TriggerRequest &req, std_srvs::TriggerResponse &res);
+    void pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose);
     bool is_close_local_goal(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose,
                              const geometry_msgs::PoseStamped &local_goal);
 
@@ -19,8 +22,10 @@ class WaypointsManager {
     ros::NodeHandle nh_;
     ros::NodeHandle private_nh_;
     ros::Subscriber pose_sub_;
-    ros::Publisher reached_goal_pub_;
+    ros::Subscriber local_goal_sub_;
     ros::Publisher local_goal_pub_;
+    ros::ServiceClient reached_goal_client_;
+    ros::ServiceServer clear_waypoints_server_;
     bool WITH_RVIZ;
     double GOAL_THRESHOLD;
     std::vector<geometry_msgs::PoseStamped> waypoints_;

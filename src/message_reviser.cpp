@@ -1,14 +1,11 @@
 #include "navigator/message_reviser.h"
 
 MessageReviser::MessageReviser() : private_nh_("~"), update_local_cmd_vel_(false) {
-    roomba_odometry_sub_ =
-        nh_.subscribe("roomba/odometry", 1, &MessageReviser::roomba_odometry_callback, this);
-    local_cmd_vel_sub_ =
-        nh_.subscribe("local_path/cmd_vel", 1, &MessageReviser::local_cmd_vel_callback, this);
-    reached_goal_sub_ =
-        nh_.subscribe("reached_goal", 1, &MessageReviser::reached_goal_callback, this);
+    roomba_odometry_sub_ = nh_.subscribe("roomba/odometry", 1, &MessageReviser::roomba_odometry_callback, this);
+    local_cmd_vel_sub_ = nh_.subscribe("local_path/cmd_vel", 1, &MessageReviser::local_cmd_vel_callback, this);
     corrected_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("roomba/corrected_odometry", 1);
     roomba_ctrl_pub_ = nh_.advertise<roomba_500driver_meiji::RoombaCtrl>("roomba/control", 1);
+    reaced_goal_service_ = nh_.advertiseService("reached_goal", &MessageReviser::reached_goal_service, this);
     private_nh_.param("HZ", HZ, 10);
     private_nh_.param("LINEAR_COEF", LINEAR_COEF, 2.0);
     private_nh_.param("START_SPEED", START_SPEED, 0.3);
@@ -28,14 +25,19 @@ void MessageReviser::local_cmd_vel_callback(const geometry_msgs::TwistConstPtr &
     update_local_cmd_vel_ = true;
 }
 
-void MessageReviser::reached_goal_callback(const std_msgs::BoolConstPtr &msg) {
-    if (msg->data) {
+bool MessageReviser::reached_goal_service(std_srvs::SetBoolRequest &req,
+                                          std_srvs::SetBoolResponse &res) {
+    if (req.data) {
         reached_goal_ = true;
         roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0.0, 0.0);
         roomba_ctrl_pub_.publish(roomba_ctrl);
+        res.message = "Set reached_goal = true.";
     } else {
         reached_goal_ = false;
+        res.message = "Set reached_goal = false.";
     }
+    res.success = true;
+    return true;
 }
 
 roomba_500driver_meiji::RoombaCtrl MessageReviser::create_ctrl(double linear_x, double angular_z) {

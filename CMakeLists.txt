@@ -4,6 +4,7 @@ project(navigator)
 find_package(catkin REQUIRED COMPONENTS
   amcl
   std_msgs
+  std_srvs
   nav_msgs
   dwa_planner
   geometry_msgs
