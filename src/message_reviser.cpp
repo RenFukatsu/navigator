@@ -27,11 +27,13 @@ void MessageReviser::local_cmd_vel_callback(const geometry_msgs::TwistConstPtr &
 
 bool MessageReviser::reached_goal_service(std_srvs::SetBoolRequest &req,
                                           std_srvs::SetBoolResponse &res) {
+    ROS_DEBUG_STREAM("Recieved reached_goal call. value = " << std::boolalpha << req.data);
     if (req.data) {
         reached_goal_ = true;
         roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0.0, 0.0);
         roomba_ctrl_pub_.publish(roomba_ctrl);
         res.message = "Set reached_goal = true.";
+        ROS_INFO_STREAM("Robot reached goal. Stop.");
     } else {
         reached_goal_ = false;
         res.message = "Set reached_goal = false.";
@@ -53,9 +55,13 @@ void MessageReviser::process() {
     static auto start_time = ros::Time::now();
     while (ros::ok()) {
         double elasped_time = (ros::Time::now() - start_time).toSec();
-        if (elasped_time <= 5.0 && !update_local_cmd_vel_) {
+        if (elasped_time <= 5.0 && !update_local_cmd_vel_ && !reached_goal_) {
             ROS_WARN_THROTTLE(1.0, "Move Forward");
             roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(START_SPEED, 0.);
+            roomba_ctrl_pub_.publish(roomba_ctrl);
+        } else if (!update_local_cmd_vel_) {
+            ROS_WARN_THROTTLE(10.0, "Stop. Local command velocity is not update");
+            roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0., 0.);
             roomba_ctrl_pub_.publish(roomba_ctrl);
         }
         ros::spinOnce();

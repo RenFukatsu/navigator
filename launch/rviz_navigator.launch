@@ -27,8 +27,9 @@
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
         <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
             <param name="WITH_RVIZ" value="true" />
+            <param name="GOAL_THRESHOLD" value="1.2" />
         </node>
-        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigator)/rviz/$(roomba).rviz" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigator)/rviz/$(arg roomba).rviz" >
             <remap from="/move_base_simple/goal" to="rviz/local_goal" />
         </node>
     </group>
