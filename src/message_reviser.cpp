@@ -27,13 +27,12 @@ void MessageReviser::local_cmd_vel_callback(const geometry_msgs::TwistConstPtr &
 
 bool MessageReviser::reached_goal_service(std_srvs::SetBoolRequest &req,
                                           std_srvs::SetBoolResponse &res) {
-    ROS_DEBUG_STREAM("Recieved reached_goal call. value = " << std::boolalpha << req.data);
+    ROS_INFO_STREAM("Recieved reached_goal call. value = " << std::boolalpha << req.data);
     if (req.data) {
         reached_goal_ = true;
         roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0.0, 0.0);
         roomba_ctrl_pub_.publish(roomba_ctrl);
         res.message = "Set reached_goal = true.";
-        ROS_INFO_STREAM("Robot reached goal. Stop.");
     } else {
         reached_goal_ = false;
         res.message = "Set reached_goal = false.";
