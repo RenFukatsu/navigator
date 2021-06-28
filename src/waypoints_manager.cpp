@@ -3,7 +3,7 @@
 WaypointsManager::WaypointsManager() : private_nh_("~") {
     pose_sub_ = nh_.subscribe("amcl_pose", 1, &WaypointsManager::pose_callback, this);
     local_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
-    reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>("reached_goal");
+    reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>(nh_.getNamespace() + "/reached_goal");
     private_nh_.param("WITH_RVIZ", WITH_RVIZ, false);
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 0.8);
     if (!WITH_RVIZ) {
