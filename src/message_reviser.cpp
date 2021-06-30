@@ -51,14 +51,8 @@ roomba_500driver_meiji::RoombaCtrl MessageReviser::create_ctrl(double linear_x, 
 
 void MessageReviser::process() {
     ros::Rate loop_rate(HZ);
-    static auto start_time = ros::Time::now();
     while (ros::ok()) {
-        double elasped_time = (ros::Time::now() - start_time).toSec();
-        if (elasped_time <= 5.0 && !update_local_cmd_vel_ && !reached_goal_) {
-            ROS_WARN_THROTTLE(1.0, "Move Forward");
-            roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(START_SPEED, 0.);
-            roomba_ctrl_pub_.publish(roomba_ctrl);
-        } else if (!update_local_cmd_vel_) {
+        if (!update_local_cmd_vel_) {
             ROS_WARN_THROTTLE(10.0, "Stop. Local command velocity is not update");
             roomba_500driver_meiji::RoombaCtrl roomba_ctrl = create_ctrl(0., 0.);
             roomba_ctrl_pub_.publish(roomba_ctrl);
