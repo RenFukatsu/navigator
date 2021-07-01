@@ -67,16 +67,20 @@ void WaypointsManager::timer_callback(const ros::TimerEvent &event) {
             ROS_ERROR("Failed to call service reached_goal");
         }
     };
+    if (way_points_idx < waypoints_.size() && is_close_local_goal(current_pose_, waypoints_[way_points_idx])) {
+        way_points_idx++;
+    }
     if (way_points_idx >= waypoints_.size()) {
         if (way_points_idx != waypoints_.size()) way_points_idx = waypoints_.size();
         ROS_INFO_THROTTLE(15.0, "Robot reached last waypoint.");
-        if (!reached_goal_) call_reached_goal(reached_goal_client_, true);
+        if (!reached_goal_) {
+            call_reached_goal(reached_goal_client_, true);
+            reached_goal_ = true;
+        }
         return;
-    } else {
-        if (reached_goal_) call_reached_goal(reached_goal_client_, false);
-    }
-    if (is_close_local_goal(current_pose_, waypoints_[way_points_idx])) {
-        way_points_idx++;
+    } else if (reached_goal_) {
+        call_reached_goal(reached_goal_client_, false);
+        reached_goal_ = false;
     }
     geometry_msgs::PoseStamped local_goal = waypoints_[way_points_idx];
     local_goal.header.stamp = ros::Time::now();
