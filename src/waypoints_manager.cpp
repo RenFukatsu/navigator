@@ -9,6 +9,7 @@ WaypointsManager::WaypointsManager() : private_nh_("~"), reached_goal_(false) {
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 0.8);
     if (!WITH_RVIZ) {
         read_waypoints();
+        ROS_INFO_STREAM("Read waypoints size = " << waypoints_.size() << ".");
     } else {
         local_goal_sub_ = nh_.subscribe("rviz/local_goal", 1, &WaypointsManager::rviz_local_goal_callback, this);
         clear_waypoints_server_ =
