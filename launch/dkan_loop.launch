@@ -30,5 +30,5 @@
         </node>
     </group>
 
-    <node pkg="rosbag" type="record" name="rosbag_record" args="-O dkan_loop_$(arg roomba).bag /$(arg roomba)/scan /roomba1/amcl_pose /roomba2/amcl_pose /roomba3/amcl_pose /roomba4/amcl_pose /roomba5/amcl_pose /roomba6/amcl_pose /$(arg roomba)/roomba/odometry /tf /tf_static" />
+    <node pkg="rosbag" type="record" name="rosbag_record" args="record -o /home/amsl/$(arg roomba).bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/amcl_pose /tf /tf_static" />
 </launch>
