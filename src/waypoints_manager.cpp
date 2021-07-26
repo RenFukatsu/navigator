@@ -6,6 +6,7 @@ WaypointsManager::WaypointsManager() : private_nh_("~"), reached_goal_(false) {
     reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>(nh_.getNamespace() + "/reached_goal");
     private_nh_.param("HZ", HZ, 10);
     private_nh_.param("WITH_RVIZ", WITH_RVIZ, false);
+    private_nh_.param("LOOP_WAYPOINTS", LOOP_WAYPOINTS, false);
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 0.8);
     if (!WITH_RVIZ) {
         read_waypoints();
@@ -71,7 +72,9 @@ void WaypointsManager::timer_callback(const ros::TimerEvent &event) {
     if (way_points_idx < waypoints_.size() && is_close_local_goal(current_pose_, waypoints_[way_points_idx])) {
         way_points_idx++;
     }
-    if (way_points_idx >= waypoints_.size()) {
+    if (way_points_idx >= waypoints_.size() && LOOP_WAYPOINTS) {
+        way_points_idx = 0;
+    } else if (way_points_idx >= waypoints_.size()) {
         if (way_points_idx != waypoints_.size()) way_points_idx = waypoints_.size();
         ROS_INFO_THROTTLE(15.0, "Robot reached last waypoint.");
         if (!reached_goal_) {

@@ -30,6 +30,7 @@ class WaypointsManager {
     ros::ServiceServer clear_waypoints_server_;
     int HZ;
     bool WITH_RVIZ;
+    bool LOOP_WAYPOINTS;
     double GOAL_THRESHOLD;
     geometry_msgs::PoseWithCovarianceStamped current_pose_;
     std::vector<geometry_msgs::PoseStamped> waypoints_;
