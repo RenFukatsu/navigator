@@ -1,6 +1,6 @@
 #include "navigator/message_reviser.h"
 
-MessageReviser::MessageReviser() : private_nh_("~"), update_local_cmd_vel_(false) {
+MessageReviser::MessageReviser() : private_nh_("~"), update_local_cmd_vel_(false), reached_goal_(false) {
     roomba_odometry_sub_ = nh_.subscribe("roomba/odometry", 1, &MessageReviser::roomba_odometry_callback, this);
     local_cmd_vel_sub_ = nh_.subscribe("local_path/cmd_vel", 1, &MessageReviser::local_cmd_vel_callback, this);
     corrected_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("roomba/corrected_odometry", 1);
