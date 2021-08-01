@@ -27,6 +27,7 @@
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
         <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
             <param name="RAMDOM_WAYPOINTS" value="true" />
+            <param name="GOAL_THRESHOLD" value="1.5" />
             <rosparam command="load" file="$(find navigator)/config/dkan_all_waypoints.yaml" />
             <rosparam command="load" file="$(find navigator)/config/dkan_all_points_relation.yaml" />
             <param name="FIRST_POSITION" value="5" />
