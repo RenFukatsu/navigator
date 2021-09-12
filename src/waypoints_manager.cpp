@@ -1,7 +1,7 @@
 #include "navigator/waypoints_manager.h"
 
 WaypointsManager::WaypointsManager()
-    : private_nh_("~"), reached_goal_(false), mt_(std::random_device {}()), dist_(0, 1000) {
+    : private_nh_("~"), reached_goal_(false), mt_(std::random_device{}()), dist_(0, 1000) {
     pose_sub_ = nh_.subscribe("amcl_pose", 1, &WaypointsManager::pose_callback, this);
     local_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
     reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>(nh_.getNamespace() + "/reached_goal");
@@ -9,6 +9,8 @@ WaypointsManager::WaypointsManager()
     private_nh_.param("LOOP_WAYPOINTS", LOOP_WAYPOINTS, false);
     private_nh_.param("RANDOM_WAYPOINTS", RANDOM_WAYPOINTS, false);
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 0.8);
+    private_nh_.param("ADVANCE_LENGTH", ADVANCE_LENGTH, 3.0);
+    private_nh_.param("RIGHT_DISTANCE", RIGHT_DISTANCE, 0.7);
     bool WITH_RVIZ;
     private_nh_.param("WITH_RVIZ", WITH_RVIZ, false);
     if (RANDOM_WAYPOINTS) {
@@ -19,6 +21,7 @@ WaypointsManager::WaypointsManager()
         pre_pos_idx_ = idx;
         ROS_ASSERT(private_nh_.getParam("FIRST_LOCAL_GOAL", idx));
         next_pos_idx_ = idx;
+        waypoints_.push_back(points_[pre_pos_idx_]);
         waypoints_.push_back(points_[next_pos_idx_]);
     } else if (!WITH_RVIZ) {
         read_waypoints(&waypoints_);
@@ -125,8 +128,84 @@ void WaypointsManager::timer_callback(const ros::TimerEvent &event) {
         reached_goal_ = false;
     }
     geometry_msgs::PoseStamped local_goal = waypoints_[way_points_idx];
+    if (way_points_idx > 0) calc_local_goal(waypoints_[way_points_idx - 1], waypoints_[way_points_idx], &local_goal);
     local_goal.header.stamp = ros::Time::now();
     local_goal_pub_.publish(local_goal);
+}
+
+void WaypointsManager::calc_local_goal(const geometry_msgs::PoseStamped &pre_waypoint,
+                                       const geometry_msgs::PoseStamped &next_waypoint,
+                                       geometry_msgs::PoseStamped *local_goal) {
+    double x_p = pre_waypoint.pose.position.x;
+    double y_p = pre_waypoint.pose.position.y;
+    double x_n = next_waypoint.pose.position.x;
+    double y_n = next_waypoint.pose.position.y;
+    double a1, b1;
+    get_line(x_p, y_p, x_n, y_n, &a1, &b1);
+    double x_c = current_pose_.pose.pose.position.x;
+    double y_c = current_pose_.pose.pose.position.y;
+    double a2, b2;
+    get_vertical_line(a1, x_c, y_c, &a2, &b2);
+    double x_t, y_t;
+    get_intersection(a1, b1, a2, b2, &x_t, &y_t);
+    double x_s, y_s;
+    get_advance_point(x_p, y_p, x_n, y_n, x_t, y_t, ADVANCE_LENGTH, &x_s, &y_s);
+    if ((x_s < x_p || x_n < x_s) && (x_s < x_n || x_p < x_s)) {
+        x_s = x_n;
+        y_s = y_n;
+    }
+    double a3, b3;
+    get_vertical_line(a1, x_s, y_s, &a3, &b3);
+    double x_l, y_l;
+    get_vertical_advance_point(x_p, y_p, x_n, y_n, x_s, y_s, RIGHT_DISTANCE, &x_l, &y_l);
+    local_goal->pose.orientation.w = 1.0;
+    local_goal->pose.orientation.x = 0.0;
+    local_goal->pose.orientation.y = 0.0;
+    local_goal->pose.orientation.z = 0.0;
+    local_goal->pose.position.x = x_l;
+    local_goal->pose.position.y = y_l;
+    local_goal->pose.position.z = 0;
+}
+
+// y = ax + b
+void WaypointsManager::get_line(double x1, double y1, double x2, double y2, double *a, double *b) {
+    double denominator = x2 - x1;
+    if (std::abs(denominator) < 0.0001) denominator = 0.0001;
+    *a = (y2 - y1) / denominator;
+    *b = *a * (-x1) + y1;
+}
+
+void WaypointsManager::get_vertical_line(double a_src, double x, double y, double *a, double *b) {
+    *a = -1.0 / a_src;
+    *b = y - *a * x;
+}
+
+void WaypointsManager::get_intersection(double a1, double b1, double a2, double b2, double *x, double *y) {
+    // a1*x + b1 = a2*x + b2
+    // (a1 - a2) x = b2 - b1
+    // x = (b2 - b1) / (a1 - a2)
+    double denominator = a1 - a2;
+    if (std::abs(denominator) < 0.0001) denominator = 0.0001;
+    *x = (b2 - b1) / denominator;
+    *y = a1 * *x + b1;
+}
+
+void WaypointsManager::get_advance_point(double x1, double y1, double x2, double y2, double x_src, double y_src,
+                                         double len, double *x, double *y) {
+    double sq = std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    double dx = (x2 - x1) / sq;
+    double dy = (y2 - y1) / sq;
+    *x = x_src + dx * len;
+    *y = y_src + dy * len;
+}
+
+void WaypointsManager::get_vertical_advance_point(double x1, double y1, double x2, double y2, double x_src,
+                                                  double y_src, double len, double *x, double *y) {
+    double sq = std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    double dx = (y2 - y1) / sq;
+    double dy = -(x2 - x1) / sq;
+    *x = x_src + dx * len;
+    *y = y_src + dy * len;
 }
 
 void WaypointsManager::pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr &amcl_pose) {
