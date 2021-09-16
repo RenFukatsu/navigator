@@ -12,8 +12,8 @@
         </include>
         <include file="$(find roomba_visualizer)/launch/amcl.launch" >
             <arg name="roomba" default="$(arg roomba)" />
-            <arg name="init_x" default="7.01362943649292" />
-            <arg name="init_y" default="0.11450195312500" />
+            <arg name="init_x" default="7.11344146728516" />
+            <arg name="init_y" default="11.99455165863037" />
             <arg name="init_a" default="-1.5708" />
         </include>
 
