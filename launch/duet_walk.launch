@@ -5,18 +5,6 @@
 
     <arg name="map_file" default="$(find roomba_visualizer)/map/map.yaml" />
 
-    <group if="$(eval roomba=='roomba1' or roomba=='roomba2')">
-        <arg name="route_file" default="route1" />
-    </group>
-
-    <group if="$(eval roomba=='roomba3' or roomba=='roomba4')">
-        <arg name="route_file" default="route2" />
-    </group>
-
-    <group if="$(eval roomba=='roomba5' or roomba=='roomba6')">
-        <arg name="route_file" default="route3" />
-    </group>
-
     <group ns="$(arg roomba)" >
         <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
         <include file="$(find multi_robots)/launch/launch_devices.launch" >
@@ -41,9 +29,26 @@
         </node>
 
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
-        <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
-            <rosparam command="load" file="$(find navigator)/config/$(arg route_file).yaml" />
-        </node>
+        <group if="$(eval roomba=='roomba1' or roomba=='roomba2')">
+            <arg name="route_file" default="route1" />
+            <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
+                <rosparam command="load" file="$(find navigator)/config/$(arg route_file).yaml" />
+            </node>
+        </group>
+
+        <group if="$(eval roomba=='roomba3' or roomba=='roomba4')">
+            <arg name="route_file" default="route2" />
+            <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
+                <rosparam command="load" file="$(find navigator)/config/$(arg route_file).yaml" />
+            </node>
+        </group>
+
+        <group if="$(eval roomba=='roomba5' or roomba=='roomba6')">
+            <arg name="route_file" default="route3" />
+            <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
+                <rosparam command="load" file="$(find navigator)/config/$(arg route_file).yaml" />
+            </node>
+        </group>
         <node pkg="rosbag" type="record" name="rosbag_record" args="record -o /home/amsl/$(arg roomba)_duet_walk.bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/amcl_pose /$(arg roomba)/target/position /$(arg roomba)/target/angle /tf /tf_static" />
     </group>
 
