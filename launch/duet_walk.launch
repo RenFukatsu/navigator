@@ -49,7 +49,7 @@
                 <rosparam command="load" file="$(find navigator)/config/$(arg route_file).yaml" />
             </node>
         </group>
-        <node pkg="rosbag" type="record" name="rosbag_record" args="record -o /home/amsl/$(arg roomba)_duet_walk.bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/corrected_scan /$(arg roomba)/amcl_pose /$(arg roomba)/local_goal /$(arg roomba)/particlecloud /$(arg roomba)/target/position /$(arg roomba)/target/angle /tf /tf_static" />
+        <node pkg="rosbag" type="record" name="rosbag_record" args="record -o /home/amsl/$(arg roomba)_duet_walk.bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/corrected_scan /$(arg roomba)/amcl_pose /$(arg roomba)/local_goal /$(arg roomba)/dwa_planner/selected_trajectory /$(arg roomba)/dwa_planner/candidate_trajectories /$(arg roomba)/particlecloud /$(arg roomba)/target/position /$(arg roomba)/target/angle /tf /tf_static" />
     </group>
 
 </launch>
