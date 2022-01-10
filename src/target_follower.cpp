@@ -1,12 +1,7 @@
 #include "navigator/target_follower.h"
 
 TargetFollower::TargetFollower() : private_nh_("~"), reached_goal_(false) {
-    if (!private_nh_.hasParam("TARGET_ROOMBA")) {
-        ROS_ERROR_STREAM("TARGET_ROOMBA parameter is not set.");
-        ros::shutdown();
-        return;
-    }
-    private_nh_.getParam("TARGET_ROOMBA", TARGET_ROOMBA);
+    ROS_ASSERT(private_nh_.getParam("TARGET_ROOMBA", TARGET_ROOMBA));
     private_nh_.param("HZ", HZ, 10.0);
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 1.0);
     pose_sub_ = nh_.subscribe("amcl_pose", 1, &TargetFollower::pose_callback, this);
@@ -57,3 +52,5 @@ bool TargetFollower::is_close_points(const geometry_msgs::PoseWithCovarianceStam
     if (std::sqrt(diff_x * diff_x + diff_y * diff_y) <= GOAL_THRESHOLD) return true;
     return false;
 }
+
+void TargetFollower::process() { ros::spin(); }

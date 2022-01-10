@@ -7,6 +7,8 @@
 #include <std_srvs/SetBool.h>
 #include <std_srvs/Trigger.h>
 
+#include <fstream>
+#include <iomanip>
 #include <random>
 
 class WaypointsManager {
@@ -15,6 +17,7 @@ class WaypointsManager {
     void process();
     void read_waypoints(std::vector<geometry_msgs::PoseStamped> *waypoints);
     void read_points_relation();
+    void random_waypoint_to_yaml(int size);
     void timer_callback(const ros::TimerEvent &event);
     void calc_local_goal(const geometry_msgs::PoseStamped &pre_waypoint,
                          const geometry_msgs::PoseStamped &next_waypoint, geometry_msgs::PoseStamped *local_goal);
@@ -43,6 +46,7 @@ class WaypointsManager {
     int HZ;
     bool LOOP_WAYPOINTS;
     bool RANDOM_WAYPOINTS;
+    int EXPORT_WAYPOINTS_SIZE;
     double GOAL_THRESHOLD;
     double ADVANCE_LENGTH;
     double RIGHT_DISTANCE;

@@ -8,6 +8,7 @@ WaypointsManager::WaypointsManager()
     private_nh_.param("HZ", HZ, 10);
     private_nh_.param("LOOP_WAYPOINTS", LOOP_WAYPOINTS, false);
     private_nh_.param("RANDOM_WAYPOINTS", RANDOM_WAYPOINTS, false);
+    private_nh_.param("EXPORT_WAYPOINTS_SIZE", EXPORT_WAYPOINTS_SIZE, -1);
     private_nh_.param("GOAL_THRESHOLD", GOAL_THRESHOLD, 0.8);
     private_nh_.param("ADVANCE_LENGTH", ADVANCE_LENGTH, 3.0);
     private_nh_.param("RIGHT_DISTANCE", RIGHT_DISTANCE, 0.7);
@@ -23,6 +24,11 @@ WaypointsManager::WaypointsManager()
         next_pos_idx_ = idx;
         waypoints_.push_back(points_[pre_pos_idx_]);
         waypoints_.push_back(points_[next_pos_idx_]);
+        if (EXPORT_WAYPOINTS_SIZE > 0) {
+            random_waypoint_to_yaml(EXPORT_WAYPOINTS_SIZE);
+            ros::shutdown();
+            return;
+        }
     } else if (!WITH_RVIZ) {
         read_waypoints(&waypoints_);
         ROS_INFO_STREAM("Read waypoints size = " << waypoints_.size() << ".");
@@ -31,6 +37,33 @@ WaypointsManager::WaypointsManager()
         clear_waypoints_server_ =
             nh_.advertiseService("clear_waypoints", &WaypointsManager::clear_waypoints_service, this);
     }
+}
+
+void WaypointsManager::random_waypoint_to_yaml(int size) {
+    for (int i = waypoints_.size(); i < size; i++) {
+        const auto &candidate = points_relation_[next_pos_idx_];
+        int random_idx = dist_(mt_) % candidate.size();
+        if (candidate[random_idx] == pre_pos_idx_) {
+            random_idx++;
+            random_idx %= candidate.size();
+        }
+        pre_pos_idx_ = next_pos_idx_;
+        next_pos_idx_ = candidate[random_idx];
+        waypoints_.push_back(points_[next_pos_idx_]);
+    }
+    ROS_INFO_STREAM("random waypoints size = " << waypoints_.size());
+
+    std::string fname;
+    private_nh_.param("WAYPOINTS_FILENAME", fname, std::string(""));
+    std::ofstream ofs(fname);
+    for (int i = 0; i < waypoints_.size(); i++) {
+        ofs << "waypoint" << i << ": [";
+        ofs << std::fixed << std::setprecision(14) << waypoints_[i].pose.position.x << ", "
+            << waypoints_[i].pose.position.y << ", " << waypoints_[i].pose.position.z << ", "
+            << waypoints_[i].pose.orientation.w << ", " << waypoints_[i].pose.orientation.x << ", "
+            << waypoints_[i].pose.orientation.y << ", " << waypoints_[i].pose.orientation.z << "]\n";
+    }
+    ROS_INFO_STREAM("random waypoints file is " << fname);
 }
 
 void WaypointsManager::read_waypoints(std::vector<geometry_msgs::PoseStamped> *waypoints) {
