@@ -7,6 +7,7 @@ TargetFollower::TargetFollower() : private_nh_("~"), reached_goal_(false) {
     pose_sub_ = nh_.subscribe("amcl_pose", 1, &TargetFollower::pose_callback, this);
     std::string target_pose_topic = "/" + TARGET_ROOMBA + "/amcl_pose";
     target_pose_sub_ = nh_.subscribe(target_pose_topic.c_str(), 1, &TargetFollower::target_pose_callback, this);
+    local_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
     reached_goal_client_ = nh_.serviceClient<std_srvs::SetBool>(nh_.getNamespace() + "/reached_goal");
 }
 
