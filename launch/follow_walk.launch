@@ -31,9 +31,9 @@
         </node>
 
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
-        <group if="$(eval roomba=='roomba0')">
+        <group if="$(eval roomba=='roomba1')">
             <node pkg="navigator" type="target_follower" name="target_follower">
-                <param name="TARGET_ROOMBA" value="roomba1" />
+                <param name="TARGET_ROOMBA" value="roomba2" />
                 <param name="GOAL_THRESHOLD" value="$(arg goal_dist)" />
             </node>
         </group>
@@ -59,7 +59,7 @@
             </node>
         </group>
 
-        <group if="$(eval roomba=='roomba1' or roomba=='roomba2' or roomba=='roomba3' or roomba=='roomba5' or roomba=='roomba8' or roomba=='roomba9')">
+        <group if="$(eval roomba=='roomba0' or roomba=='roomba2' or roomba=='roomba3' or roomba=='roomba5' or roomba=='roomba8' or roomba=='roomba9')">
             <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
                 <rosparam command="load" file="$(find navigator)/config/$(arg roomba).yaml" />
                 <param name="GOAL_THRESHOLD" value="$(arg goal_dist)" />
