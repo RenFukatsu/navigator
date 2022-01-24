@@ -2,7 +2,7 @@
 <launch>
     <arg name="roomba" />
     <arg name="robot_frame_id" default="$(arg roomba)/base_link" />
-    <arg name="goal_dist" default="1.0" />
+    <arg name="goal_dist" default="3.0" />
     <arg name="right_dist" default="0.2" />
 
     <arg name="map_file" default="$(find roomba_visualizer)/map/map.yaml" />
