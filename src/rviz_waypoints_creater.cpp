@@ -8,7 +8,8 @@ RvizWaypointsCreater::RvizWaypointsCreater() : private_nh_("~") {
         timer = nh_.createTimer(ros::Duration(1.0), &RvizWaypointsCreater::timer_callback, this);
         pose_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
     } else {
-        ROS_ASSERT(nh_.getParam("filename", filename));
+        ROS_ASSERT(private_nh_.getParam("filename", filename));
+        ROS_INFO_STREAM("output file is " << filename);
         pose_sub_ = nh_.subscribe("/move_base_simple/goal", 1, &RvizWaypointsCreater::pose_callback, this);
     }
 }
