@@ -12,10 +12,6 @@
         <include file="$(find multi_robots)/launch/launch_devices.launch" >
             <arg name="roomba" default="$(arg roomba)" />
         </include>
-        <include file="$(find multi_robots)/launch/launch_softwares.launch" >
-            <arg name="roomba" default="$(arg roomba)" />
-            <arg name="use_colors" default="green,blue,purple" />
-        </include>
         <include file="$(find roomba_visualizer)/launch/amcl.launch" >
             <arg name="roomba" default="$(arg roomba)" />
         </include>
