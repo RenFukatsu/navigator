@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="roomba" />
+    <arg name="roomba"default="roomba1" />
     <arg name="robot_frame_id" default="$(arg roomba)/base_link" />
     <arg name="goal_dist" default="2.0" />
     <arg name="right_dist" default="0.2" />
-
     <arg name="map_file" default="$(find roomba_visualizer)/map/map.yaml" />
 
     <group ns="$(arg roomba)" >
@@ -33,7 +32,7 @@
 
         <!-- dwa_planner -->
         <node pkg="dwa_planner" type="dwa_planner" name="dwa_planner">
-            <rosparam command="load" file="$(find navigator)/config/dwa_param.yaml"/>
+            <rosparam command="load" file="$(find navigator)/config/karasawa_dwa_param.yaml"/>
             <param name="ROBOT_FRAME" value="$(arg robot_frame_id)" />
             <remap from="/local_map" to="local_map"/>
             <remap from="/scan" to="corrected_scan"/>
@@ -42,11 +41,8 @@
             <remap from="/odom" to="roomba/corrected_odometry"/>
         </node>
 
-        <!-- pole_eliminator -->
-        <include file="$(find pole_eliminator)/launch/pole_eliminator.launch" />
-
         <!-- rosbag -->
-        <node pkg="rosbag" type="record" name="rosbag_record" args="record -O /home/amsl/$(arg roomba).bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/corrected_scan /$(arg roomba)/amcl_pose /$(arg roomba)/particlecloud /$(arg roomba)/local_goal /$(arg roomba)/dwa_planner/selected_trajectory /$(arg roomba)/dwa_planner/candidate_trajectories /$(arg roomba)/target/position /$(arg roomba)/target/angle /$(arg roomba)/map /tf /tf_static" />
+        <!-- <node pkg="rosbag" type="record" name="rosbag_record" args="record -O /home/amsl/$(arg roomba).bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/corrected_scan /$(arg roomba)/amcl_pose /$(arg roomba)/particlecloud /$(arg roomba)/local_goal /$(arg roomba)/dwa_planner/selected_trajectory /$(arg roomba)/dwa_planner/candidate_trajectories /$(arg roomba)/target/position /$(arg roomba)/target/angle /$(arg roomba)/map /tf /tf_static" /> -->
     </group>
 
 </launch>
