@@ -5,6 +5,7 @@ RvizWaypointsCreater::RvizWaypointsCreater() : private_nh_("~") {
     private_nh_.param("CONFIRM_WAYPOINTS", only_see, false);
     if (only_see) {
         read_waypoints(&points_);
+        ros::Duration(1.0).sleep();  // wait for rviz to start
         timer = nh_.createTimer(ros::Duration(1.0), &RvizWaypointsCreater::timer_callback, this);
         pose_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("local_goal", 1);
     } else {

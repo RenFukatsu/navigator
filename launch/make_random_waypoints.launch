@@ -3,11 +3,11 @@
     <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager" output="screen" required="true">
         <param name="RANDOM_WAYPOINTS" value="true" />
         <param name="GOAL_THRESHOLD" value="1.5" />
-        <rosparam command="load" file="$(find navigator)/config/dkan_all_waypoints.yaml" />
-        <rosparam command="load" file="$(find navigator)/config/dkan_all_points_relation.yaml" />
+        <rosparam command="load" file="$(find navigator)/config/random/dkan_all_waypoints.yaml" />
+        <rosparam command="load" file="$(find navigator)/config/random/dkan_all_points_relation.yaml" />
         <param name="FIRST_POSITION" value="5" />
         <param name="FIRST_LOCAL_GOAL" value="8" />
         <param name="EXPORT_WAYPOINTS_SIZE" value="30" />
-        <param name="WAYPOINTS_FILENAME" value="$(find navigator)/config/random_waypoints.yaml" />
+        <param name="WAYPOINTS_FILENAME" value="$(find navigator)/config/waypoints.yaml" />
     </node>
 </launch>

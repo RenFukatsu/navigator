@@ -15,7 +15,7 @@
         </include>
 
         <node pkg="dwa_planner" type="dwa_planner" name="dwa_planner">
-            <rosparam command="load" file="$(find navigator)/config/dwa_param.yaml"/>
+            <rosparam command="load" file="$(find navigator)/config/dwa/dwa_param.yaml"/>
             <param name="ROBOT_FRAME" value="$(arg robot_frame_id)" />
             <remap from="/local_map" to="local_map"/>
             <remap from="/scan" to="corrected_scan"/>
@@ -26,7 +26,7 @@
 
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
         <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
-            <rosparam command="load" file="$(find navigator)/config/dkan_loop_waypoints.yaml" />
+            <rosparam command="load" file="$(find navigator)/config/waypoints/dkan_loop_waypoints.yaml" />
         </node>
         <node pkg="rosbag" type="record" name="rosbag_record" args="record -o /home/amsl/$(arg roomba)_dkan_loop.bag /$(arg roomba)/camera/aligned_depth_to_color/image_raw/compressed /$(arg roomba)/camera/color/camera_info /$(arg roomba)/camera/color/image_rect_color/compressed /$(arg roomba)/theta_s/image_raw/compressed /$(arg roomba)/roomba/odometry /$(arg roomba)/scan /$(arg roomba)/amcl_pose /$(arg roomba)/target/position /$(arg roomba)/target/angle /tf /tf_static" />
     </group>
