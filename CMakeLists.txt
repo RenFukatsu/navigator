@@ -32,3 +32,6 @@ target_link_libraries(rviz_waypoints_creater ${catkin_LIBRARIES})
 
 add_executable(target_follower src/target_follower.cpp src/target_follower_node.cpp)
 target_link_libraries(target_follower ${catkin_LIBRARIES})
+
+add_executable(amcl_pose_republisher src/amcl_pose_republisher.cpp)
+target_link_libraries(amcl_pose_republisher ${catkin_LIBRARIES})
