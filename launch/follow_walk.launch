@@ -86,7 +86,7 @@
 
         <group if="$(eval roomba=='roomba0' or roomba=='roomba2' or roomba=='roomba3' or roomba=='roomba5' or roomba=='roomba8' or roomba=='roomba9')">
             <node pkg="navigator" type="waypoints_manager_node" name="waypoint_manager">
-                <rosparam command="load" file="$(find navigator)/config/dkan_all/$(arg roomba).yaml" />
+                <rosparam command="load" file="$(find navigator)/config/dkan_cross/$(arg roomba).yaml" />
                 <param name="GOAL_THRESHOLD" value="$(arg goal_dist)" />
                 <param name="RIGHT_DISTANCE" value="$(arg right_dist)" />
             </node>
