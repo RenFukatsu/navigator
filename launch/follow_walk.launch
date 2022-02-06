@@ -16,7 +16,7 @@
             <arg name="roomba" value="$(arg roomba)" />
             <arg name="init_x" value="5.94087648391724" />
             <arg name="init_y" value="1.34385836124420" />
-            <arg name="init_a" value="0.0" />
+            <arg name="init_a" value="3.1415" />
         </include>
 
         <node pkg="navigator" type="message_reviser_node" name="message_reviser" />
