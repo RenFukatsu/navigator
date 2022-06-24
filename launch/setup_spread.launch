@@ -16,7 +16,8 @@
         </include>
 
         <!-- amcl -->
-        <include file="$(find roomba_visualizer)/launch/amcl.launch" >
+        <!-- <include file="$(find roomba_visualizer)/launch/amcl.launch" > -->
+        <include file="$(find roomba_visualizer)/launch/amcl_spread.launch" >
             <arg name="roomba" default="$(arg roomba)" />
         </include>
 
