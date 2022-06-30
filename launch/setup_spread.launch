@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="roomba" default="roomba1" />
+    <arg name="is_rviz" default="true" />
+
     <arg name="goal_dist" default="2.0" />
     <arg name="right_dist" default="0.2" />
     <arg name="map_file" default="$(find roomba_visualizer)/map/map.yaml" />
@@ -31,6 +33,11 @@
             <param name="GOAL_THRESHOLD" value="$(arg goal_dist)" />
             <param name="RIGHT_DISTANCE" value="$(arg right_dist)" />
         </node>
+    </group>
+
+    <!-- rviz -->
+    <group if="$(arg is_rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigator)config/rviz/$(arg roomba).rviz" /> 
     </group>
 
 </launch>
